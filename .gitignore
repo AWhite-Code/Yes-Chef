@@ -1,0 +1,58 @@
+# Ignore build output folders
+bin/
+obj/
+
+# Ignore user-specific files in Visual Studio Code
+.vscode/
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+
+# Ignore macOS specific files
+.DS_Store
+
+# Ignore Windows specific files
+Thumbs.db
+desktop.ini
+
+# Ignore build outputs for .NET
+**/bin/
+**/obj/
+
+# Ignore local user settings for Visual Studio
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignore project-level and user-level files
+.vs/
+.idea/
+*.sln.iml
+
+# Ignore Visual Studio Code extensions
+.history/
+
+# Ignore test result and code coverage files
+TestResults/
+*.coverage
+*.coveragexml
+*.testsettings
+*.vsmdi
+*.vsix
+*.vspscc
+*.vspx
+*.vsw
+
+# Ignore files created by popular JetBrains editors like Rider
+.idea/
+*.sln.iml
+
+# Ignore additional directories and files not relevant for version control
+node_modules/
+logs/
+*.log
+
+# Ignore generated assets and resources
+Resources/Generated/
+Resources/*.designer.cs
