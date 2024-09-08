@@ -56,3 +56,10 @@ logs/
 # Ignore generated assets and resources
 Resources/Generated/
 Resources/*.designer.cs
+
+# Allow essential directories
+!Resources/
+!Platforms/
+!MauiProgram.cs
+!MainPage.xaml
+!MainPage.xaml.cs
