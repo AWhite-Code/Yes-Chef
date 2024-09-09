@@ -1,4 +1,5 @@
 using YesChefApp.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
 
@@ -46,13 +47,14 @@ namespace YesChefApp.Services
             }
         }
 
-        public async Task<Recipe?> GetTestRecipeAsync() // Return type changed to Recipe?
+        // Method to get a test recipe asynchronously
+        public async Task<Recipe?> GetTestRecipeAsync()
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Recipes WHERE Id = 1"; // Sample query for PoC
+            command.CommandText = "SELECT * FROM Recipes LIMIT 1"; // Fetch the first recipe as a test
 
             using var reader = await command.ExecuteReaderAsync();
             if (reader.Read())
@@ -68,7 +70,34 @@ namespace YesChefApp.Services
                 };
             }
 
-            return null; // Explicitly return null if no recipe is found
+            return null; // Return null if no recipe is found
+        }
+
+        // Method to get a specific recipe by ID
+        public Recipe? GetRecipeById(int recipeId)
+        {
+            using var connection = new SqliteConnection(_connectionString);
+            connection.Open();
+
+            var command = connection.CreateCommand();
+            command.CommandText = "SELECT * FROM Recipes WHERE Id = $id";
+            command.Parameters.AddWithValue("$id", recipeId);
+
+            using var reader = command.ExecuteReader();
+            if (reader.Read())
+            {
+                return new Recipe
+                {
+                    Id = reader.GetInt32(0),
+                    Name = reader.GetString(1),
+                    Description = reader.GetString(2),
+                    Ingredients = reader.GetString(3),
+                    Instructions = reader.GetString(4),
+                    ImageUrl = reader.GetString(5)
+                };
+            }
+
+            return null;
         }
     }
 }

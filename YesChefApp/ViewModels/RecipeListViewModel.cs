@@ -8,22 +8,28 @@ namespace YesChefApp.ViewModels
     public class RecipeListViewModel : INotifyPropertyChanged
     {
         private readonly RecipeService _recipeService;
-        public ObservableCollection<Recipe> Recipes { get; set; }
+        public ObservableCollection<Recipe> Recipes { get; set; } // ObservableCollection of Recipes
 
         public RecipeListViewModel()
         {
             _recipeService = new RecipeService();
             Recipes = new ObservableCollection<Recipe>();
-            LoadRecipes();
+            LoadRecipes(); // Load recipes on initialization
         }
 
         private async void LoadRecipes()
         {
-            var recipe = await _recipeService.GetTestRecipeAsync();
+            Console.WriteLine("Loading recipes..."); // Debug statement
+            var recipe = await _recipeService.GetTestRecipeAsync(); // Use GetTestRecipeAsync to fetch test recipe
             if (recipe != null)
             {
                 Recipes.Add(recipe);
                 OnPropertyChanged(nameof(Recipes));
+                Console.WriteLine($"Loaded recipe: {recipe.Name}"); // Debug statement
+            }
+            else
+            {
+                Console.WriteLine("No recipes found."); // Debug statement
             }
         }
 
@@ -35,8 +41,11 @@ namespace YesChefApp.ViewModels
             {
                 _selectedRecipe = value;
                 OnPropertyChanged(nameof(SelectedRecipe));
+                Console.WriteLine($"Selected recipe: {_selectedRecipe?.Name}"); // Debug statement
                 if (_selectedRecipe != null)
                 {
+                    // Debug statement to confirm navigation
+                    Console.WriteLine($"Navigating to RecipeDetailPage for recipe ID: {_selectedRecipe.Id}");
                     Shell.Current.GoToAsync($"RecipeDetailPage?recipeId={_selectedRecipe.Id}");
                 }
             }

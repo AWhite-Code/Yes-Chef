@@ -5,13 +5,17 @@
 
     <!-- UI Elements for the Recipe List Page -->
     <StackLayout Padding="10">
+        <!-- Title Label -->
         <Label Text="Select a Recipe" FontSize="Large" />
+
+        <!-- ListView to display the list of recipes -->
         <ListView x:Name="RecipeListView"
                   ItemsSource="{Binding Recipes}" 
-                  SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}">
+                  SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}"> <!-- Correctly bind to SelectedRecipe property -->
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Description}" /> <!-- Properly formatted binding -->
+                    <!-- Correctly bind to Recipe properties 'Name' and 'Description' -->
+                    <TextCell Text="{Binding Name}" Detail="{Binding Description}" /> 
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
