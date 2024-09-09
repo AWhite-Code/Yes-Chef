@@ -1,5 +1,5 @@
 using System.ComponentModel;
-using YesChefApp.Models; // Updated namespace
+using YesChefApp.Models;
 
 namespace YesChefApp.ViewModels
 {
@@ -18,10 +18,10 @@ namespace YesChefApp.ViewModels
 
         public RecipeDetailViewModel(Recipe recipe)
         {
-            Recipe = recipe;
+            _recipe = recipe ?? new Recipe(); // Initialize to a new Recipe if null
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged; // Allow nullability
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

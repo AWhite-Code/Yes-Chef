@@ -1,14 +1,14 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using YesChefApp.Models; // Updated namespace
-using YesChefApp.Services; // Updated namespace
+using YesChefApp.Models;
+using YesChefApp.Services;
 
 namespace YesChefApp.ViewModels
 {
     public class RecipeListViewModel : INotifyPropertyChanged
     {
-        private readonly RecipeService _recipeService; 
-        public ObservableCollection<Recipe> Recipes { get; set; } 
+        private readonly RecipeService _recipeService;
+        public ObservableCollection<Recipe> Recipes { get; set; }
 
         public RecipeListViewModel()
         {
@@ -19,22 +19,22 @@ namespace YesChefApp.ViewModels
 
         private async void LoadRecipes()
         {
-            var recipe = await _recipeService.GetTestRecipeAsync(); 
+            var recipe = await _recipeService.GetTestRecipeAsync();
             if (recipe != null)
             {
-                Recipes.Add(recipe); 
-                OnPropertyChanged(nameof(Recipes)); 
+                Recipes.Add(recipe);
+                OnPropertyChanged(nameof(Recipes));
             }
         }
 
-        private Recipe _selectedRecipe;
-        public Recipe SelectedRecipe
+        private Recipe? _selectedRecipe; // Made nullable
+        public Recipe? SelectedRecipe
         {
             get => _selectedRecipe;
             set
             {
-                _selectedRecipe = value; 
-                OnPropertyChanged(nameof(SelectedRecipe)); 
+                _selectedRecipe = value;
+                OnPropertyChanged(nameof(SelectedRecipe));
                 if (_selectedRecipe != null)
                 {
                     Shell.Current.GoToAsync($"RecipeDetailPage?recipeId={_selectedRecipe.Id}");
@@ -42,7 +42,7 @@ namespace YesChefApp.ViewModels
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged; // Allow nullability
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

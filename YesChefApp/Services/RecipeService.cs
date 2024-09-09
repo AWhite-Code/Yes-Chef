@@ -1,20 +1,20 @@
-using YesChefApp.Models; // Updated namespace
+using YesChefApp.Models;
 using System.Threading.Tasks;
-using Microsoft.Data.Sqlite; 
+using Microsoft.Data.Sqlite;
 
 namespace YesChefApp.Services
 {
     public class RecipeService
     {
-        private readonly string _connectionString = "Data Source=recipes.db"; 
+        private readonly string _connectionString = "Data Source=recipes.db";
 
-        public async Task<Recipe> GetTestRecipeAsync()
+        public async Task<Recipe?> GetTestRecipeAsync() // Return type changed to Recipe?
         {
             using var connection = new SqliteConnection(_connectionString);
             await connection.OpenAsync();
 
             var command = connection.CreateCommand();
-            command.CommandText = "SELECT * FROM Recipes WHERE Id = 1"; 
+            command.CommandText = "SELECT * FROM Recipes WHERE Id = 1";
 
             using var reader = await command.ExecuteReaderAsync();
             if (reader.Read())
@@ -29,7 +29,8 @@ namespace YesChefApp.Services
                     ImageUrl = reader.GetString(5)
                 };
             }
-            return null;
+
+            return null; // Explicitly return null if no recipe is found
         }
     }
 }
