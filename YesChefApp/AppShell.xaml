@@ -7,9 +7,7 @@
     Shell.FlyoutBehavior="Disabled"
     Title="YesChefApp">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <ShellContent Title="Recipe List" ContentTemplate="{DataTemplate local:RecipeListPage}" Route="RecipeListPage" />
+    <ShellContent Title="Recipe Detail" ContentTemplate="{DataTemplate local:RecipeDetailPage}" Route="RecipeDetailPage" />
 
 </Shell>
