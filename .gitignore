@@ -63,3 +63,6 @@ Resources/*.designer.cs
 !MauiProgram.cs
 !MainPage.xaml
 !MainPage.xaml.cs
+
+# Database Files
+.db
