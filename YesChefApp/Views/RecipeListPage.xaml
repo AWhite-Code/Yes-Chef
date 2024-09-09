@@ -7,11 +7,11 @@
     <StackLayout Padding="10">
         <Label Text="Select a Recipe" FontSize="Large" />
         <ListView x:Name="RecipeListView"
-                  ItemsSource="{Binding Recipes}"
+                  ItemsSource="{Binding Recipes}" 
                   SelectedItem="{Binding SelectedRecipe, Mode=TwoWay}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextCell Text="{Binding Name}" Detail="{Binding Description}" />
+                    <TextCell Text="{Binding Name}" Detail="{Binding Description}" /> <!-- Properly formatted binding -->
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
