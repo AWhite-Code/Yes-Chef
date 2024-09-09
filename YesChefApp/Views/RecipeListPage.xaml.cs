@@ -1,13 +1,13 @@
-using YesChefApp.ViewModels;
+using YesChefApp.ViewModels; // Ensure this is correct
 
-namespace YesChef.Views
+namespace YesChefApp.Views // Ensure namespace matches
 {
     public partial class RecipeListPage : ContentPage
     {
         public RecipeListPage()
         {
             InitializeComponent();
-            BindingContext = new RecipeListViewModel(); // Bind to ViewModel
+            BindingContext = new RecipeListViewModel(); // Ensure ViewModel is correctly referenced
         }
     }
 }

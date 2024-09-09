@@ -21,7 +21,7 @@ namespace YesChefApp.ViewModels
             _recipe = recipe ?? new Recipe(); // Initialize to a new Recipe if null
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged; // Allow nullability
+        public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged(string propertyName) =>
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
