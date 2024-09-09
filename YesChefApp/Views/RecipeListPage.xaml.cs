@@ -1,1 +1,13 @@
-// Blank File for now while I set everything up
+using YesChefApp.ViewModels;
+
+namespace YesChef.Views
+{
+    public partial class RecipeListPage : ContentPage
+    {
+        public RecipeListPage()
+        {
+            InitializeComponent();
+            BindingContext = new RecipeListViewModel(); // Bind to ViewModel
+        }
+    }
+}
