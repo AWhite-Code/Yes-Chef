@@ -15,10 +15,6 @@ obj/
 Thumbs.db
 desktop.ini
 
-# Ignore build outputs for .NET
-**/bin/
-**/obj/
-
 # Ignore local user settings for Visual Studio
 *.user
 *.suo
@@ -44,10 +40,6 @@ TestResults/
 *.vspx
 *.vsw
 
-# Ignore files created by popular JetBrains editors like Rider
-.idea/
-*.sln.iml
-
 # Ignore additional directories and files not relevant for version control
 node_modules/
 logs/
@@ -57,12 +49,35 @@ logs/
 Resources/Generated/
 Resources/*.designer.cs
 
-# Allow essential directories
+# Ignore NuGet packages (if using packages.config)
+packages/
+
+# Ignore Rider project files
+.idea/
+
+# Ignore Git related files
+*.gitignore
+
+# Ignore appsettings.json for security
+appsettings.json
+
+# Ignore database files
+*.db
+
+# Allow essential directories and files
 !Resources/
 !Platforms/
 !MauiProgram.cs
 !MainPage.xaml
 !MainPage.xaml.cs
 
-# Database Files
-.db
+# Ignore other sensitive files
+*.pem
+*.key
+*.pfx
+*.p12
+*.cer
+
+# Ignore secrets files
+secrets.json
+secrets.development.json
