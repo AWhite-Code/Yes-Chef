@@ -1,4 +1,10 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Yes_Chef.Data;
+using System.Reflection;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
+
 
 namespace Yes_Chef
 {
@@ -7,17 +13,17 @@ namespace Yes_Chef
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 });
 
-#if DEBUG
-    		builder.Logging.AddDebug();
-#endif
+            // Register DbContext
+            builder.Services.AddDbContext<YesChefContext>(options =>
+                options.UseSqlite(builder.Configuration.GetConnectionString("YesChefConnection")));
 
             return builder.Build();
         }

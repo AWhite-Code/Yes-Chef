@@ -1,23 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace RecipeBookApp.Models
+namespace Yes_Chef.Models
 {
     public class Recipe
     {
         [Key]
-        public int RecipeId { get; set; }
+        public int RecipeID { get; set; }
 
         [Required]
-        public string Name { get; set; } = string.Empty;
+        [MaxLength(200)]
+        public string RecipeName { get; set; }
 
-        public string Description { get; set; } = string.Empty;
+        [MaxLength(1000)]
+        public string? Description { get; set; }
 
-        public string Ingredients { get; set; } = string.Empty;
+        public DateTime DateCreated { get; set; }
 
-        public string Instructions { get; set; } = string.Empty;
+        public DateTime DateModified { get; set; }
 
-        // Initialize to prevent null references
-        public ICollection<RecipeCategory> RecipeCategories { get; set; } = new List<RecipeCategory>();
+        [Required]
+        public int ServingSize { get; set; }
+
+        [MaxLength(200)]
+        public string? Tags { get; set; }
+
+        // Navigation Properties
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        public ICollection<Instruction> Instructions { get; set; }
+        public ICollection<Image> Images { get; set; }
     }
 }
