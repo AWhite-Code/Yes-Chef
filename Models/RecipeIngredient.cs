@@ -19,10 +19,10 @@ namespace Yes_Chef.Models
 
         [Required]
         [MaxLength(50)]
-        public string Unit { get; set; }
+        public string Unit { get; set; } = string.Empty;
 
         // Navigation Properties
-        public Recipe Recipe { get; set; }
-        public IngredientRef IngredientRef { get; set; }
+        public Recipe Recipe { get; set; } = null!; 
+        public IngredientRef IngredientRef { get; set; } = null!; 
     }
 }

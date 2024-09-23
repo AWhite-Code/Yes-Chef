@@ -16,12 +16,12 @@ namespace Yes_Chef.Models
 
         [Required]
         [MaxLength(1000)]
-        public string InstructionText { get; set; }
+        public string InstructionText { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string? StepType { get; set; }
 
         // Navigation Property
-        public Recipe Recipe { get; set; }
+        public Recipe Recipe { get; set; } = null!;
     }
 }

@@ -14,11 +14,11 @@ namespace Yes_Chef.Models
 
         [Required]
         [MaxLength(500)]
-        public string ImageURL { get; set; }
+        public string ImageURL { get; set; } = string.Empty;
 
         public DateTime DateUploaded { get; set; }
 
         // Navigation Property
-        public Recipe Recipe { get; set; }
+        public Recipe Recipe { get; set; } = null!;
     }
 }

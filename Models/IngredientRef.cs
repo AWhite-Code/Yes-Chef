@@ -10,19 +10,18 @@ namespace Yes_Chef.Models
 
         [Required]
         [MaxLength(100)]
-        public string IngredientName { get; set; }
-
+        public string IngredientName { get; set; } = string.Empty;
         [MaxLength(100)]
         public string? IngredientCategory { get; set; }
 
         [Required]
         [MaxLength(100)]
-        public string NormalizedIngredientName { get; set; }
+        public string NormalizedIngredientName { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string? UnitType { get; set; }
 
         // Navigation Property
-        public ICollection<RecipeIngredient> RecipeIngredients { get; set; }
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
     }
 }
