@@ -3,13 +3,13 @@
     x:Class="Yes_Chef.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Yes_Chef"
+    xmlns:views="clr-namespace:Yes_Chef.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="Yes_Chef">
 
     <ShellContent
         Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
+        ContentTemplate="{DataTemplate views:MainPage}"
         Route="MainPage" />
 
 </Shell>
