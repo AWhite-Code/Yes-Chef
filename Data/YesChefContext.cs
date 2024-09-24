@@ -48,6 +48,33 @@ namespace Yes_Chef.Data
                 .HasOne(img => img.Recipe)
                 .WithMany(r => r.Images)
                 .HasForeignKey(img => img.RecipeID);
+
+            modelBuilder.Entity<Recipe>().HasData(
+                new Recipe
+                {
+                    RecipeID = 1,
+                    RecipeName = "Spaghetti Bolognese",
+                    Description = "A classic Italian pasta dish.",
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                    ServingSize = 4,
+                    Tags = "Italian, Pasta",
+                    PrepTime = new TimeSpan(0, 15, 0),
+                    CookTime = new TimeSpan(0, 45, 0)
+                },
+                new Recipe
+                {
+                    RecipeID = 2,
+                    RecipeName = "Chicken Curry",
+                    Description = "A spicy and flavorful dish.",
+                    DateCreated = DateTime.Now,
+                    DateModified = DateTime.Now,
+                    ServingSize = 4,
+                    Tags = "Indian, Spicy",
+                    PrepTime = new TimeSpan(0, 20, 0),
+                    CookTime = new TimeSpan(1, 0, 0)
+                }
+            );
         }
     }
 }

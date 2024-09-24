@@ -27,7 +27,6 @@ namespace Yes_Chef.Models
         [MaxLength(200)]
         public string? Tags { get; set; }
 
-        // New Properties
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }
 
