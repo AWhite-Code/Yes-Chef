@@ -1,13 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Yes_Chef.Data;
-using System.Reflection;
-using Microsoft.Maui.Controls.Hosting;
-using Microsoft.Maui.Hosting;
-using Yes_Chef.ViewModels;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Yes_Chef.Views;
-
+using Yes_Chef.ViewModels;
+using Yes_Chef.Data;
+using Microsoft.EntityFrameworkCore;
+using System.IO;
 
 namespace Yes_Chef
 {
@@ -19,11 +15,21 @@ namespace Yes_Chef
 
             // Configure fonts and app
             builder
-                .UseMauiApp<App>()
+                .UseMauiApp<App>() // We'll modify this line below
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
+
+            // Configure services
+            builder.Services.AddSingleton<MainPage>();
+            builder.Services.AddSingleton<MainPageViewModel>();
+
+            builder.Services.AddTransient<RecipeListPage>();
+            builder.Services.AddTransient<RecipeListViewModel>();
+
+            builder.Services.AddTransient<RecipeDetailPage>();
+            builder.Services.AddTransient<RecipeDetailViewModel>();
 
             // Configure DbContext with SQLite
             string dbPath = Path.Combine(FileSystem.AppDataDirectory, "YesChefDatabase.db3");
@@ -33,13 +39,7 @@ namespace Yes_Chef
                 options.UseSqlite($"Filename={dbPath}");
             });
 
-            // Register services and view models
-            builder.Services.AddSingleton<MainPage>();
-            builder.Services.AddSingleton<MainPageViewModel>();
-
-            builder.Services.AddTransient<RecipeListPage>();
-            builder.Services.AddTransient<RecipeListViewModel>();
-
+            // Build the app
             var app = builder.Build();
 
             // Initialize the database
@@ -49,7 +49,8 @@ namespace Yes_Chef
                 db.Database.EnsureCreated();
             }
 
-            return app;
+            // Pass the ServiceProvider to the App class
+            return new App(app.Services);
         }
     }
 }

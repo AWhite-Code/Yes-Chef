@@ -135,7 +135,7 @@ namespace Yes_Chef.ViewModels
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Handle exceptions (e.g., display an error message)
             }
