@@ -15,7 +15,7 @@ namespace Yes_Chef.Data
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
-        public DbSet<Image> Images { get; set; }
+        public DbSet<RecipeImage> RecipeImages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -44,7 +44,7 @@ namespace Yes_Chef.Data
                 .WithMany(r => r.Instructions)
                 .HasForeignKey(i => i.RecipeID);
 
-            modelBuilder.Entity<Image>()
+            modelBuilder.Entity<RecipeImage>()
                 .HasOne(img => img.Recipe)
                 .WithMany(r => r.Images)
                 .HasForeignKey(img => img.RecipeID);

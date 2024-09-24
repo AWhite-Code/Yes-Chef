@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yes_Chef.Models
 {
-    public class Image
+    public class RecipeImage
     {
         [Key]
         public int ImageID { get; set; }

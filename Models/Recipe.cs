@@ -29,6 +29,6 @@ namespace Yes_Chef.Models
         // Navigation Properties
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>(); 
         public ICollection<Instruction> Instructions { get; set; } = new List<Instruction>();
-        public ICollection<Image> Images { get; set; } = new List<Image>();
+        public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
     }
 }
