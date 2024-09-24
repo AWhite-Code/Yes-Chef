@@ -6,7 +6,10 @@
     Title="Recipes">
 
     <ContentPage.Content>
-        <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None">
+        <CollectionView
+            ItemsSource="{Binding Recipes}"
+            SelectionMode="Single"
+            SelectionChanged="OnSelectionChanged">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Grid Padding="10" ColumnSpacing="10" RowSpacing="5">
