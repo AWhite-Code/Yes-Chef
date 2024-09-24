@@ -1,13 +1,61 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
+    x:Class="Yes_Chef.Views.RecipeListPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="Yes_Chef.Views.RecipeListPage">
+    Title="Recipes">
 
-    <StackLayout>
-        <Label Text="Recipe List Page"
-               VerticalOptions="CenterAndExpand"
-               HorizontalOptions="CenterAndExpand" />
-    </StackLayout>
+    <ContentPage.Content>
+        <CollectionView ItemsSource="{Binding Recipes}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="10" ColumnSpacing="10" RowSpacing="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Left Column: Placeholder Image -->
+                        <Image
+                            Grid.RowSpan="2"
+                            Source="placeholder_image.png"
+                            WidthRequest="100"
+                            HeightRequest="100"
+                            Aspect="AspectFill"
+                            Grid.Column="0"/>
+
+                        <!-- Middle Column: Recipe Title and Description -->
+                        <StackLayout Grid.Column="1" Grid.Row="0" Grid.RowSpan="2" Spacing="5">
+                            <Label Text="{Binding RecipeName}" FontAttributes="Bold" FontSize="Medium"/>
+                            <Label Text="{Binding Description}" FontSize="Small" LineBreakMode="WordWrap"/>
+                        </StackLayout>
+
+                        <!-- Right Column: Times and Tags -->
+                        <StackLayout Grid.Column="2" Grid.Row="0" Spacing="5">
+                            <!-- Top Row: Prep Time, Cook Time, Total Time -->
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Label Text="Prep:" FontAttributes="Bold"/>
+                                <Label Text="{Binding PrepTime, StringFormat='{0:%h}h {0:%m}m'}"/>
+
+                                <Label Text="Cook:" FontAttributes="Bold"/>
+                                <Label Text="{Binding CookTime, StringFormat='{0:%h}h {0:%m}m'}"/>
+
+                                <Label Text="Total:" FontAttributes="Bold"/>
+                                <Label Text="{Binding TotalTime, StringFormat='{0:%h}h {0:%m}m'}"/>
+                            </StackLayout>
+
+                            <!-- Bottom Row: Tags -->
+                            <Label Text="{Binding Tags}" FontSize="Small" LineBreakMode="WordWrap"/>
+                        </StackLayout>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </ContentPage.Content>
 
 </ContentPage>

@@ -4,10 +4,10 @@ namespace Yes_Chef.Views
 {
     public partial class RecipeListPage : ContentPage
     {
-        public RecipeListPage()
+        public RecipeListPage(RecipeListViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = new RecipeListViewModel();
+            BindingContext = viewModel;
         }
     }
 }
