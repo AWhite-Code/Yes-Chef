@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Yes_Chef.Models
 {
@@ -26,8 +27,21 @@ namespace Yes_Chef.Models
         [MaxLength(200)]
         public string? Tags { get; set; }
 
+        // New Properties
+        public TimeSpan? PrepTime { get; set; }
+        public TimeSpan? CookTime { get; set; }
+
+        [NotMapped]
+        public TimeSpan? TotalTime
+        {
+            get
+            {
+                return (PrepTime ?? TimeSpan.Zero) + (CookTime ?? TimeSpan.Zero);
+            }
+        }
+
         // Navigation Properties
-        public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>(); 
+        public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<Instruction> Instructions { get; set; } = new List<Instruction>();
         public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
     }
