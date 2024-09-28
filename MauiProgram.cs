@@ -15,7 +15,7 @@ namespace Yes_Chef
 
             // Configure fonts and app
             builder
-                .UseMauiApp<App>() // We'll modify this line below
+                .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -50,7 +50,7 @@ namespace Yes_Chef
             }
 
             // Pass the ServiceProvider to the App class
-            return new App(app.Services);
+            return app;
         }
     }
 }
