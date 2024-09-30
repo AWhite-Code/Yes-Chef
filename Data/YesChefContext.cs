@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Linq.Expressions;
+using Yes_Chef.Data.Configurations;
 
 namespace Yes_Chef.Data
 {
@@ -23,7 +24,14 @@ namespace Yes_Chef.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Apply configurations for all entities implementing IAuditableEntity
+            // Apply configurations from separate configuration classes
+            modelBuilder.ApplyConfiguration(new IngredientRefConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeIngredientConfiguration());
+            modelBuilder.ApplyConfiguration(new InstructionConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeImageConfiguration());
+
+            // Apply global query filters for all IAuditableEntity
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
                 if (typeof(IAuditableEntity).IsAssignableFrom(entityType.ClrType))
@@ -32,94 +40,8 @@ namespace Yes_Chef.Data
                 }
             }
 
-            // Unique Constraints
-            modelBuilder.Entity<IngredientRef>()
-                .HasIndex(i => i.IngredientName)
-                .IsUnique();
-
-            modelBuilder.Entity<Recipe>()
-                .HasIndex(r => r.RecipeName)
-                .IsUnique();
-
-            // Configure RecipeIngredient with single primary key and enum
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasKey(ri => ri.RecipeIngredientID);
-
-            modelBuilder.Entity<RecipeIngredient>()
-                .Property(ri => ri.Unit)
-                .HasConversion<string>()
-                .IsRequired();
-
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasOne(ri => ri.Recipe)
-                .WithMany(r => r.RecipeIngredients)
-                .HasForeignKey(ri => ri.RecipeID);
-
-            modelBuilder.Entity<RecipeIngredient>()
-                .HasOne(ri => ri.IngredientRef)
-                .WithMany(ir => ir.RecipeIngredients)
-                .HasForeignKey(ri => ri.IngredientRefID);
-
-            // Relationships for Instruction
-            modelBuilder.Entity<Instruction>()
-                .HasOne(i => i.Recipe)
-                .WithMany(r => r.Instructions)
-                .HasForeignKey(i => i.RecipeID);
-
-            // Relationships for RecipeImage
-            modelBuilder.Entity<RecipeImage>()
-                .HasOne(img => img.Recipe)
-                .WithMany(r => r.Images)
-                .HasForeignKey(img => img.RecipeID);
-
-            // Data Validation and Constraints
-            modelBuilder.Entity<Recipe>()
-                .Property(r => r.RecipeName)
-                .IsRequired()
-                .HasMaxLength(200);
-
-            modelBuilder.Entity<IngredientRef>()
-                .Property(ir => ir.IngredientName)
-                .IsRequired()
-                .HasMaxLength(100);
-
-            modelBuilder.Entity<RecipeIngredient>()
-                .Property(ri => ri.Quantity)
-                .IsRequired();
-
-            modelBuilder.Entity<RecipeIngredient>()
-                .Property(ri => ri.Unit)
-                .IsRequired();
-
             // Seed Data Example
-            modelBuilder.Entity<Recipe>().HasData(
-                new Recipe
-                {
-                    RecipeID = 1,
-                    RecipeName = "Spaghetti Bolognese",
-                    Description = "A classic Italian pasta dish.",
-                    DateCreated = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    DateModified = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    ServingSize = 4,
-                    // Tags will be managed via RecipeTags if implemented
-                    PrepTime = new TimeSpan(0, 15, 0),
-                    CookTime = new TimeSpan(0, 45, 0)
-                },
-                new Recipe
-                {
-                    RecipeID = 2,
-                    RecipeName = "Chicken Curry",
-                    Description = "A spicy and flavorful dish.",
-                    DateCreated = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    DateModified = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
-                    ServingSize = 4,
-                    // Tags will be managed via RecipeTags if implemented
-                    PrepTime = new TimeSpan(0, 20, 0),
-                    CookTime = new TimeSpan(1, 0, 0)
-                }
-            );
-
-            // If Tags are implemented, seed Tag and RecipeTag data here
+            // If Tags are implemented in future, seed Tag and RecipeTag data here
         }
 
         private static LambdaExpression GetIsDeletedRestriction(Type type)
