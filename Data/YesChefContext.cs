@@ -28,7 +28,10 @@ namespace Yes_Chef.Data
                 .HasIndex(r => r.RecipeName)
                 .IsUnique();
 
-            // Relationships
+            // Relationships for RecipeIngredient with single primary key
+            modelBuilder.Entity<RecipeIngredient>()
+                .HasKey(ri => ri.RecipeIngredientID);
+
             modelBuilder.Entity<RecipeIngredient>()
                 .HasOne(ri => ri.Recipe)
                 .WithMany(r => r.RecipeIngredients)
@@ -39,11 +42,13 @@ namespace Yes_Chef.Data
                 .WithMany(ir => ir.RecipeIngredients)
                 .HasForeignKey(ri => ri.IngredientRefID);
 
+            // Relationships for Instruction
             modelBuilder.Entity<Instruction>()
                 .HasOne(i => i.Recipe)
                 .WithMany(r => r.Instructions)
                 .HasForeignKey(i => i.RecipeID);
 
+            // Relationships for RecipeImage
             modelBuilder.Entity<RecipeImage>()
                 .HasOne(img => img.Recipe)
                 .WithMany(r => r.Images)
