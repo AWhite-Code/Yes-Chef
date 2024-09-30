@@ -21,11 +21,12 @@ namespace Yes_Chef.Models
         public decimal Quantity { get; set; }
 
         [Required]
-        public UnitType Unit { get; set; } // Changed from string to enum
-
-        // Soft Delete Properties
+        public UnitType Unit { get; set; }
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
+
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         // Navigation Properties
         public Recipe Recipe { get; set; } = null!;

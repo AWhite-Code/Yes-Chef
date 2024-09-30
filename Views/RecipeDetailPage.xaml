@@ -48,14 +48,19 @@
                 Text="{Binding ServingSize, StringFormat='Serving Size: {0}'}" />
 
             <!-- Ingredients -->
-            <Label Text="Ingredients:" FontAttributes="Bold" FontSize="Medium" />
-            <CollectionView ItemsSource="{Binding Ingredients}">
-                <CollectionView.ItemTemplate>
+            <ListView ItemsSource="{Binding RecipeIngredients}">
+                <ListView.ItemTemplate>
                     <DataTemplate>
-                        <Label Text="{Binding IngredientRef.IngredientName, StringFormat='- {0}'}" />
+                        <ViewCell>
+                            <StackLayout Orientation="Horizontal" Padding="10">
+                                <Label Text="{Binding IngredientName}" FontAttributes="Bold" />
+                                <Label Text="{Binding Quantity}" Margin="5,0" />
+                                <Label Text="{Binding UnitAbbreviation}" />
+                            </StackLayout>
+                        </ViewCell>
                     </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
+                </ListView.ItemTemplate>
+            </ListView>
 
             <!-- Instructions -->
             <Label Text="Instructions:" FontAttributes="Bold" FontSize="Medium" />

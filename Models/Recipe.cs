@@ -24,8 +24,8 @@ namespace Yes_Chef.Models
         [Required]
         public int ServingSize { get; set; }
 
-        [MaxLength(200)]
-        public string? Tags { get; set; }
+        // Uncommonet once tags are implemented
+        // public string? Tags { get; set; }
 
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }

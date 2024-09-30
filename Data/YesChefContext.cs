@@ -101,7 +101,7 @@ namespace Yes_Chef.Data
                     DateCreated = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     DateModified = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     ServingSize = 4,
-                    Tags = "Italian, Pasta",
+                    // Tags will be managed via RecipeTags if implemented
                     PrepTime = new TimeSpan(0, 15, 0),
                     CookTime = new TimeSpan(0, 45, 0)
                 },
@@ -113,13 +113,13 @@ namespace Yes_Chef.Data
                     DateCreated = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     DateModified = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
                     ServingSize = 4,
-                    Tags = "Indian, Spicy",
+                    // Tags will be managed via RecipeTags if implemented
                     PrepTime = new TimeSpan(0, 20, 0),
                     CookTime = new TimeSpan(1, 0, 0)
                 }
             );
 
-            // Additional seed data for other entities can be added here
+            // If Tags are implemented, seed Tag and RecipeTag data here
         }
 
         private static LambdaExpression GetIsDeletedRestriction(Type type)
