@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Yes_Chef.Models.Interfaces;
 
 namespace Yes_Chef.Models
 {
-    public class IngredientRef
+    public class IngredientRef : IAuditableEntity
     {
         [Key]
         public int IngredientRefID { get; set; }
@@ -11,6 +13,7 @@ namespace Yes_Chef.Models
         [Required]
         [MaxLength(100)]
         public string IngredientName { get; set; } = string.Empty;
+
         [MaxLength(100)]
         public string? IngredientCategory { get; set; }
 
@@ -24,6 +27,10 @@ namespace Yes_Chef.Models
         // Soft Delete Properties
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
+
+        // Audit Fields
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         // Navigation Property
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
