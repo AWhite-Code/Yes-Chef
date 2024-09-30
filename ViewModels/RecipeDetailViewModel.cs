@@ -116,7 +116,7 @@ namespace Yes_Chef.ViewModels
                     Description = recipe.Description;
                     PrepTime = recipe.PrepTime;
                     CookTime = recipe.CookTime;
-                    Tags = recipe.Tags;
+                    //Tags = recipe.Tags;
                     ServingSize = recipe.ServingSize;
                     ImageSource = "placeholder_image.png"; // Update if actual images are available
 
