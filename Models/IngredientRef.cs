@@ -21,6 +21,10 @@ namespace Yes_Chef.Models
         [MaxLength(50)]
         public string? UnitType { get; set; }
 
+        // Soft Delete Properties
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+
         // Navigation Property
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
     }

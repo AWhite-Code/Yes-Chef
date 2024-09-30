@@ -23,6 +23,10 @@ namespace Yes_Chef.Models
 
         // Navigation Properties
         public Recipe Recipe { get; set; } = null!; 
-        public IngredientRef IngredientRef { get; set; } = null!; 
+        public IngredientRef IngredientRef { get; set; } = null!;
+
+        // Soft Delete Properties
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
     }
 }

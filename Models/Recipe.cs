@@ -30,6 +30,9 @@ namespace Yes_Chef.Models
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }
 
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
+
         [NotMapped]
         public TimeSpan? TotalTime
         {
