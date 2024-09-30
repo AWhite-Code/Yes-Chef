@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Yes_Chef.Models.Interfaces;
 
 namespace Yes_Chef.Models
 {
-    public class Recipe
+    public class Recipe : IAuditableEntity
     {
         [Key]
         public int RecipeID { get; set; }
@@ -17,9 +18,8 @@ namespace Yes_Chef.Models
         [MaxLength(1000)]
         public string? Description { get; set; }
 
-        public DateTime DateCreated { get; set; }
-
-        public DateTime DateModified { get; set; }
+        public DateTime DateCreated { get; set; } = DateTime.UtcNow;
+        public DateTime DateModified { get; set; } = DateTime.UtcNow;
 
         [Required]
         public int ServingSize { get; set; }
@@ -30,9 +30,6 @@ namespace Yes_Chef.Models
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }
 
-        public bool IsDeleted { get; set; } = false;
-        public DateTime? DeletedAt { get; set; }
-
         [NotMapped]
         public TimeSpan? TotalTime
         {
@@ -41,6 +38,10 @@ namespace Yes_Chef.Models
                 return (PrepTime ?? TimeSpan.Zero) + (CookTime ?? TimeSpan.Zero);
             }
         }
+
+        // Soft Delete Properties
+        public bool IsDeleted { get; set; } = false;
+        public DateTime? DeletedAt { get; set; }
 
         // Navigation Properties
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();

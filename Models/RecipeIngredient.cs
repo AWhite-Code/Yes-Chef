@@ -1,9 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Yes_Chef.Models.Enums;
+using Yes_Chef.Models.Interfaces;
 
 namespace Yes_Chef.Models
 {
-    public class RecipeIngredient
+    public class RecipeIngredient : IAuditableEntity
     {
         [Key]
         public int RecipeIngredientID { get; set; }
@@ -18,15 +21,14 @@ namespace Yes_Chef.Models
         public decimal Quantity { get; set; }
 
         [Required]
-        [MaxLength(50)]
-        public string Unit { get; set; } = string.Empty;
-
-        // Navigation Properties
-        public Recipe Recipe { get; set; } = null!; 
-        public IngredientRef IngredientRef { get; set; } = null!;
+        public UnitType Unit { get; set; } // Changed from string to enum
 
         // Soft Delete Properties
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
+
+        // Navigation Properties
+        public Recipe Recipe { get; set; } = null!;
+        public IngredientRef IngredientRef { get; set; } = null!;
     }
 }
