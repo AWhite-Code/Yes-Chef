@@ -16,6 +16,8 @@ namespace Yes_Chef.Models
         [Required]
         public string StepDescription { get; set; } = string.Empty;
 
+        public int StepNumber { get; set; } = 0;
+
         // Soft Delete Properties
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
