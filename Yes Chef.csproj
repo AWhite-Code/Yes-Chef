@@ -36,7 +36,11 @@
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
 		<TargetPlatformMinVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</TargetPlatformMinVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'tizen'">6.5</SupportedOSPlatformVersion>
+		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+		<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
 	</PropertyGroup>
+
+
 
 	<ItemGroup>
 		<!-- App Icon -->
@@ -70,6 +74,10 @@
 
 	<ItemGroup>
 	  <Folder Include="Services\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="YesChef.Data\YesChef.Data.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
