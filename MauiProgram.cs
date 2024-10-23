@@ -1,9 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Yes_Chef.Views;
-using Yes_Chef.ViewModels;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Yes_Chef.Data;
+using Yes_Chef.ViewModels;
+using Yes_Chef.Views;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
+using System.Reflection;
 
 namespace Yes_Chef
 {
@@ -12,6 +13,20 @@ namespace Yes_Chef
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
+
+            // Build configuration
+            var a = Assembly.GetExecutingAssembly();
+            using var stream = a.GetManifestResourceStream("Yes_Chef.appsettings.json");
+            if (stream == null)
+            {
+                throw new InvalidOperationException("Could not find embedded resource 'Yes_Chef.appsettings.json'");
+            }
+
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build();
+
+            builder.Configuration.AddConfiguration(config);
 
             // Configure fonts and app
             builder
@@ -31,12 +46,11 @@ namespace Yes_Chef
             builder.Services.AddTransient<RecipeDetailPage>();
             builder.Services.AddTransient<RecipeDetailViewModel>();
 
-            // Configure DbContext with SQLite
-            string dbPath = Path.Combine(FileSystem.AppDataDirectory, "YesChefDatabase.db3");
-
+            // Configure DbContext
             builder.Services.AddDbContext<YesChefContext>(options =>
             {
-                options.UseSqlite($"Filename={dbPath}");
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
             });
 
             // Build the app
@@ -49,7 +63,6 @@ namespace Yes_Chef
                 db.Database.EnsureCreated();
             }
 
-            // Pass the ServiceProvider to the App class
             return app;
         }
     }

@@ -27,7 +27,8 @@ namespace Yes_Chef.Data.Configurations
 
             // Property Configurations
             builder.Property(ri => ri.Quantity)
-                   .IsRequired();
+                .IsRequired()
+                .HasPrecision(18, 4);
 
             // Seed Data (if applicable)
             // Add seed data here if needed
