@@ -9,21 +9,20 @@ namespace Yes_Chef.ViewModels
 {
     public class RecipeListViewModel : BaseViewModel
     {
-        private readonly YesChefContext _context;
+        private readonly IDbContextFactory<YesChefContext> _contextFactory;
 
         public ObservableCollection<Recipe> Recipes { get; }
 
-        public RecipeListViewModel(YesChefContext context)
+        public RecipeListViewModel(IDbContextFactory<YesChefContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             Recipes = new ObservableCollection<Recipe>();
 
-            // Load data
+            // Initialize commands
             LoadDataCommand = new Command(async () => await LoadDataAsync());
-            LoadDataCommand.Execute(null);
-
             AddRecipeCommand = new Command(async () => await NavigateToAddRecipePage());
         }
+
         public Command LoadDataCommand { get; }
         public Command AddRecipeCommand { get; }
 
@@ -32,19 +31,25 @@ namespace Yes_Chef.ViewModels
             await Shell.Current.GoToAsync(nameof(AddRecipePage));
         }
 
+        public bool IsDataLoaded { get; private set; }
+        private bool _isLoading;
+
         private async Task LoadDataAsync()
         {
+            if (_isLoading)
+                return;
+
+            _isLoading = true;
             IsBusy = true;
 
             try
             {
-                // Fetch recipes from the database
-                var recipes = await _context.Recipes.ToListAsync();
+                using var context = _contextFactory.CreateDbContext();
 
-                // Clear existing items
+                var recipes = await context.Recipes.AsNoTracking().ToListAsync();
+
                 Recipes.Clear();
 
-                // Add fetched recipes to the collection
                 foreach (var recipe in recipes)
                 {
                     Recipes.Add(recipe);
@@ -53,6 +58,7 @@ namespace Yes_Chef.ViewModels
             finally
             {
                 IsBusy = false;
+                _isLoading = false;
             }
         }
     }

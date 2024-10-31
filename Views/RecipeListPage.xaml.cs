@@ -17,7 +17,7 @@ namespace Yes_Chef.Views
         {
             base.OnAppearing();
             _viewModel.LoadDataCommand.Execute(null);
-        } 
+        }
 
         private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

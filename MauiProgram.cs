@@ -57,6 +57,13 @@ namespace Yes_Chef
                 options.UseSqlServer(connectionString);
             });
 
+            builder.Services.AddDbContextFactory<YesChefContext>(options =>
+            {
+                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                options.UseSqlServer(connectionString);
+            });
+
+
             // Build the app
             var app = builder.Build();
 
