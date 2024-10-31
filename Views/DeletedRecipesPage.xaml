@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Yes_Chef.Views.DeletedRecipesPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:Yes_Chef.Views"
+    Title="Rubbish Bin">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+            <CollectionView ItemsSource="{Binding DeletedRecipes}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5" Margin="5" BackgroundColor="#f0f0f0">
+                            <Label Text="{Binding RecipeName}" FontAttributes="Bold" FontSize="Medium" />
+                            <Label Text="{Binding Description}" FontSize="Small" />
+                            <Label Text="{Binding DeletedAt, StringFormat='Deleted At: {0:yyyy-MM-dd HH:mm}'}" FontSize="Small" />
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <Button Text="Restore" Command="{Binding BindingContext.RestoreRecipeCommand, Source={RelativeSource AncestorType={x:Type views:DeletedRecipesPage}}}" CommandParameter="{Binding .}" />
+                                <Button Text="Delete Permanently" Command="{Binding BindingContext.PermanentlyDeleteRecipeCommand, Source={RelativeSource AncestorType={x:Type views:DeletedRecipesPage}}}" CommandParameter="{Binding .}" />
+                            </StackLayout>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

@@ -13,14 +13,16 @@ namespace Yes_Chef.ViewModels
 
         public ObservableCollection<Recipe> Recipes { get; }
 
+        public Command NavigateToDeletedRecipesCommand { get; }
+
         public RecipeListViewModel(IDbContextFactory<YesChefContext> contextFactory)
         {
             _contextFactory = contextFactory;
             Recipes = new ObservableCollection<Recipe>();
 
-            // Initialize commands
             LoadDataCommand = new Command(async () => await LoadDataAsync());
             AddRecipeCommand = new Command(async () => await NavigateToAddRecipePage());
+            NavigateToDeletedRecipesCommand = new Command(async () => await Shell.Current.GoToAsync($"///{nameof(DeletedRecipesPage)}"));
         }
 
         public Command LoadDataCommand { get; }

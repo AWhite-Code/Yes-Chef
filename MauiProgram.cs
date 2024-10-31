@@ -5,11 +5,40 @@ using Yes_Chef.ViewModels;
 using Yes_Chef.Views;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Yes_Chef.Services;
 
 namespace Yes_Chef
 {
     public static class MauiProgram
     {
+
+        private static void InitializeDatabaseAndCleanup(MauiApp app)
+        {
+            // Initialize the database
+            using (var scope = app.Services.CreateScope())
+            {
+                var contextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<YesChefContext>>();
+                using var context = contextFactory.CreateDbContext();
+                context.Database.EnsureCreated();
+            }
+
+            // Run cleanup asynchronously
+            Task.Run(async () =>
+            {
+                using var scope = app.Services.CreateScope();
+                var cleanupService = scope.ServiceProvider.GetRequiredService<DataCleanupService>();
+                try
+                {
+                    await cleanupService.CleanupDeletedRecipesAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Handle exceptions (e.g., log the error)
+                    System.Diagnostics.Debug.WriteLine($"Error during cleanup: {ex.Message}");
+                }
+            });
+        }
+
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
@@ -49,6 +78,12 @@ namespace Yes_Chef
             builder.Services.AddTransient<AddRecipePage>();
             builder.Services.AddTransient<AddRecipeViewModel>();
 
+            builder.Services.AddTransient<DeletedRecipesPage>();
+            builder.Services.AddTransient<DeletedRecipesViewModel>();
+
+            builder.Services.AddSingleton<DataCleanupService>();
+
+
 
             // Configure DbContext
             builder.Services.AddDbContextFactory<YesChefContext>(options =>
@@ -61,13 +96,7 @@ namespace Yes_Chef
             // Build the app
             var app = builder.Build();
 
-            // Initialize the database
-            using (var scope = app.Services.CreateScope())
-            {
-                var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<YesChefContext>>();
-                using var db = dbContextFactory.CreateDbContext();
-                db.Database.EnsureCreated();
-            }
+            InitializeDatabaseAndCleanup(app);
 
             return app;
         }

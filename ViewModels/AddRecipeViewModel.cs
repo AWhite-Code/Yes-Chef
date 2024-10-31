@@ -2,10 +2,13 @@ using System.Collections.ObjectModel;
 using Yes_Chef.Models;
 using Yes_Chef.Data;
 using Yes_Chef.ViewModels;
+using Yes_Chef.Views;
+using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore;
 
 public class AddRecipeViewModel : BaseViewModel
 {
-    private readonly YesChefContext _context;
+    private readonly IDbContextFactory<YesChefContext> _contextFactory;
 
     // Properties bound to the UI
     public string RecipeName { get; set; }
@@ -20,9 +23,9 @@ public class AddRecipeViewModel : BaseViewModel
     public Command SaveCommand { get; }
     public Command CancelCommand { get; }
 
-    public AddRecipeViewModel(YesChefContext context)
+    public AddRecipeViewModel(IDbContextFactory<YesChefContext> contextFactory)
     {
-        _context = context;
+        _contextFactory = contextFactory;
         Ingredients = new ObservableCollection<RecipeIngredient>();
         Instructions = new ObservableCollection<Instruction>();
 
@@ -42,8 +45,9 @@ public class AddRecipeViewModel : BaseViewModel
             // Initialize other properties here
         };
 
-        _context.Recipes.Add(recipe);
-        await _context.SaveChangesAsync();
+        using var context = _contextFactory.CreateDbContext();
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
 
         // Navigate back to the recipe list
         await Shell.Current.GoToAsync("..");
