@@ -153,7 +153,8 @@ namespace Yes_Chef.ViewModels
                     .Include(r => r.RecipeIngredients)
                         .ThenInclude(ri => ri.IngredientRef)
                     .Include(r => r.Instructions)
-                    .FirstOrDefaultAsync(r => r.RecipeID == RecipeID);
+                    .Where(r => r.DeletedAt == null && r.RecipeID == RecipeID)
+                    .FirstOrDefaultAsync();
 
                 if (recipe != null)
                 {

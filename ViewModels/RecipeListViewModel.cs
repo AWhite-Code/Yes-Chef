@@ -38,18 +38,17 @@ namespace Yes_Chef.ViewModels
         {
             if (_isLoading)
                 return;
-
             _isLoading = true;
             IsBusy = true;
-
             try
             {
                 using var context = _contextFactory.CreateDbContext();
-
-                var recipes = await context.Recipes.AsNoTracking().ToListAsync();
+                var recipes = await context.Recipes
+                    .Where(r => r.DeletedAt == null)
+                    .AsNoTracking()
+                    .ToListAsync();
 
                 Recipes.Clear();
-
                 foreach (var recipe in recipes)
                 {
                     Recipes.Add(recipe);
@@ -61,5 +60,6 @@ namespace Yes_Chef.ViewModels
                 _isLoading = false;
             }
         }
+
     }
 }
