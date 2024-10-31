@@ -51,12 +51,6 @@ namespace Yes_Chef
 
 
             // Configure DbContext
-            builder.Services.AddDbContext<YesChefContext>(options =>
-            {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
-                options.UseSqlServer(connectionString);
-            });
-
             builder.Services.AddDbContextFactory<YesChefContext>(options =>
             {
                 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -70,7 +64,8 @@ namespace Yes_Chef
             // Initialize the database
             using (var scope = app.Services.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<YesChefContext>();
+                var dbContextFactory = scope.ServiceProvider.GetRequiredService<IDbContextFactory<YesChefContext>>();
+                using var db = dbContextFactory.CreateDbContext();
                 db.Database.EnsureCreated();
             }
 
