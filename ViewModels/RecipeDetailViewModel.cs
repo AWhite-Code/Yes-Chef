@@ -7,12 +7,13 @@ using Microsoft.Maui.Controls;
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using System.Windows.Input;
 
 namespace Yes_Chef.ViewModels
 {
     public class RecipeDetailViewModel : BaseViewModel, IQueryAttributable
     {
-        private readonly YesChefContext _context;
+        private readonly IDbContextFactory<YesChefContext> _contextFactory;
 
         // Properties bound to the UI
         private int _recipeID;
@@ -75,12 +76,55 @@ namespace Yes_Chef.ViewModels
 
         public ObservableCollection<RecipeIngredient> Ingredients { get; }
         public ObservableCollection<Instruction> Instructions { get; }
+        public ICommand DeleteRecipeCommand { get; }
 
-        public RecipeDetailViewModel(YesChefContext context)
+        public RecipeDetailViewModel(IDbContextFactory<YesChefContext> contextFactory)
         {
-            _context = context;
+            _contextFactory = contextFactory;
             Ingredients = new ObservableCollection<RecipeIngredient>();
             Instructions = new ObservableCollection<Instruction>();
+
+
+            DeleteRecipeCommand = new Command(async () => await DeleteRecipe());
+        }
+
+        private async Task DeleteRecipe()
+        {
+            bool isConfirmed = await Application.Current.MainPage.DisplayAlert(
+                "Delete Recipe",
+                "Are you sure you want to delete this recipe?",
+                "Yes",
+                "No");
+
+            if (isConfirmed)
+            {
+                try
+                {
+                    using var context = _contextFactory.CreateDbContext();
+
+                    var recipe = await context.Recipes
+                        .Include(r => r.RecipeIngredients)
+                        .Include(r => r.Instructions)
+                        .FirstOrDefaultAsync(r => r.RecipeID == RecipeID);
+
+                    if (recipe != null)
+                    {
+                        context.Recipes.Remove(recipe);
+                        await context.SaveChangesAsync();
+
+                        // Navigate back to the recipe list
+                        await Shell.Current.GoToAsync("..");
+                    }
+                    else
+                    {
+                        await Application.Current.MainPage.DisplayAlert("Error", "Recipe not found.", "OK");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", $"An error occurred while deleting the recipe: {ex.Message}", "OK");
+                }
+            }
         }
 
         // Implement IQueryAttributable
@@ -102,8 +146,10 @@ namespace Yes_Chef.ViewModels
 
             try
             {
+                using var context = _contextFactory.CreateDbContext();
+
                 // Fetch the recipe including related data
-                var recipe = await _context.Recipes
+                var recipe = await context.Recipes
                     .Include(r => r.RecipeIngredients)
                         .ThenInclude(ri => ri.IngredientRef)
                     .Include(r => r.Instructions)
@@ -118,7 +164,7 @@ namespace Yes_Chef.ViewModels
                     CookTime = recipe.CookTime;
                     //Tags = recipe.Tags;
                     ServingSize = recipe.ServingSize;
-                    ImageSource = "placeholder_image.png"; // Update if actual images are available
+                    ImageSource = "placeholder_image.png"; // Update when actual images are available
 
                     // Load ingredients
                     Ingredients.Clear();
@@ -134,10 +180,15 @@ namespace Yes_Chef.ViewModels
                         Instructions.Add(instruction);
                     }
                 }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", "Recipe not found.", "OK");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 // Handle exceptions (e.g., display an error message)
+                await Application.Current.MainPage.DisplayAlert("Error", $"An error occurred: {ex.Message}", "OK");
             }
             finally
             {
