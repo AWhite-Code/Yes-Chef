@@ -22,7 +22,7 @@ namespace Yes_Chef.ViewModels
 
             LoadDataCommand = new Command(async () => await LoadDataAsync());
             AddRecipeCommand = new Command(async () => await NavigateToAddRecipePage());
-            NavigateToDeletedRecipesCommand = new Command(async () => await Shell.Current.GoToAsync($"///{nameof(DeletedRecipesPage)}"));
+            NavigateToDeletedRecipesCommand = new Command(async () => await Shell.Current.GoToAsync(nameof(DeletedRecipesPage)));
         }
 
         public Command LoadDataCommand { get; }

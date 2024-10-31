@@ -23,6 +23,12 @@ public class AddRecipeViewModel : BaseViewModel
     public Command SaveCommand { get; }
     public Command CancelCommand { get; }
 
+    private async Task Cancel()
+    {
+        // Navigate back to the previous page
+        await Shell.Current.GoToAsync("..");
+    }
+
     public AddRecipeViewModel(IDbContextFactory<YesChefContext> contextFactory)
     {
         _contextFactory = contextFactory;
@@ -35,27 +41,46 @@ public class AddRecipeViewModel : BaseViewModel
 
     private async Task SaveRecipe()
     {
+        using var context = _contextFactory.CreateDbContext();
+
+        // Normalize the recipe name for comparison
+        var normalizedRecipeName = this.RecipeName.Trim().ToLower();
+
+        // Check if a recipe with the same name already exists
+        var existingRecipe = await context.Recipes
+            .AsNoTracking()
+            .FirstOrDefaultAsync(r => r.RecipeName.ToLower() == normalizedRecipeName);
+
+        if (existingRecipe != null)
+        {
+            await Application.Current.MainPage.DisplayAlert("Error", "A recipe with this name already exists.", "OK");
+            return;
+        }
+
         var recipe = new Recipe
         {
-            RecipeName = this.RecipeName,
+            RecipeName = this.RecipeName.Trim(),
             Description = this.Description,
             ServingSize = this.ServingSize,
             PrepTime = this.PrepTime,
             CookTime = this.CookTime,
-            // Initialize other properties here
+            // Other properties...
         };
 
-        using var context = _contextFactory.CreateDbContext();
         context.Recipes.Add(recipe);
-        await context.SaveChangesAsync();
 
-        // Navigate back to the recipe list
-        await Shell.Current.GoToAsync("..");
-    }
+        try
+        {
+            await context.SaveChangesAsync();
 
-    private async Task Cancel()
-    {
-        // Navigate back without saving
-        await Shell.Current.GoToAsync("..");
+            // Navigate back to the recipe list
+            await Shell.Current.GoToAsync("..");
+        }
+        catch (Exception ex)
+        {
+            await Application.Current.MainPage.DisplayAlert("Error", $"An unexpected error occurred: {ex.Message}", "OK");
+        }
     }
 }
+
+
