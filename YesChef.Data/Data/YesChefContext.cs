@@ -40,8 +40,7 @@ namespace Yes_Chef.Data
                 }
             }
 
-            // Seed Data Example
-            // If Tags are implemented in future, seed Tag and RecipeTag data here
+            // in future, seed Tag and RecipeTag data here
         }
 
         private static LambdaExpression GetIsDeletedRestriction(Type type)

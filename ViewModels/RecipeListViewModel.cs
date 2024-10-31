@@ -20,9 +20,16 @@ namespace Yes_Chef.ViewModels
             // Load data
             LoadDataCommand = new Command(async () => await LoadDataAsync());
             LoadDataCommand.Execute(null);
-        }
 
+            AddRecipeCommand = new Command(async () => await NavigateToAddRecipePage());
+        }
         public Command LoadDataCommand { get; }
+        public Command AddRecipeCommand { get; }
+
+        private async Task NavigateToAddRecipePage()
+        {
+            await Shell.Current.GoToAsync(nameof(AddRecipePage));
+        }
 
         private async Task LoadDataAsync()
         {
