@@ -46,6 +46,10 @@ namespace Yes_Chef
             builder.Services.AddTransient<RecipeDetailPage>();
             builder.Services.AddTransient<RecipeDetailViewModel>();
 
+            builder.Services.AddTransient<AddRecipePage>();
+            builder.Services.AddTransient<AddRecipeViewModel>();
+
+
             // Configure DbContext
             builder.Services.AddDbContext<YesChefContext>(options =>
             {

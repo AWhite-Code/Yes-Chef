@@ -6,11 +6,18 @@ namespace Yes_Chef.Views
 {
     public partial class RecipeListPage : ContentPage
     {
+        private readonly RecipeListViewModel _viewModel;
         public RecipeListPage(RecipeListViewModel viewModel)
         {
             InitializeComponent();
-            BindingContext = viewModel;
+            BindingContext = _viewModel = viewModel;
         }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            _viewModel.LoadDataCommand.Execute(null);
+        } 
 
         private async void OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {

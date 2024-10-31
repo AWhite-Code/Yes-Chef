@@ -1,0 +1,21 @@
+<ContentPage
+    x:Class="Yes_Chef.Views.AddRecipePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Add Recipe">
+
+    <ScrollView>
+        <StackLayout Padding="10" Spacing="10">
+            <Entry Placeholder="Recipe Name" Text="{Binding RecipeName}" />
+            <Editor Placeholder="Description" Text="{Binding Description}" />
+            <Entry Placeholder="Serving Size" Text="{Binding ServingSize}" Keyboard="Numeric" />
+            <Entry Placeholder="Prep Time (minutes)" Text="{Binding PrepTime}" Keyboard="Numeric" />
+            <Entry Placeholder="Cook Time (minutes)" Text="{Binding CookTime}" Keyboard="Numeric" />
+
+            <!-- Add controls for ingredients and instructions -->
+
+            <Button Text="Save" Command="{Binding SaveCommand}" />
+            <Button Text="Cancel" Command="{Binding CancelCommand}" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

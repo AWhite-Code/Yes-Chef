@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Yes_Chef.Data;
 using Yes_Chef.Models;
+using Yes_Chef.Views;
 
 namespace Yes_Chef.ViewModels
 {
