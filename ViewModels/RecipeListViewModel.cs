@@ -47,6 +47,8 @@ namespace Yes_Chef.ViewModels
                 using var context = _contextFactory.CreateDbContext();
                 var recipes = await context.Recipes
                     .Where(r => r.DeletedAt == null)
+                    .Include(r => r.RecipeTags)
+                        .ThenInclude(rt => rt.Tag)
                     .AsNoTracking()
                     .ToListAsync();
 
@@ -62,6 +64,7 @@ namespace Yes_Chef.ViewModels
                 _isLoading = false;
             }
         }
+
 
     }
 }

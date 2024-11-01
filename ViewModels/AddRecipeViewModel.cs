@@ -76,6 +76,12 @@ public class AddRecipeViewModel : BaseViewModel
             // Navigate back to the recipe list
             await Shell.Current.GoToAsync("..");
         }
+        catch (DbUpdateException dbEx)
+        {
+            // Capture detailed error information
+            var errorMessage = dbEx.InnerException?.Message ?? dbEx.Message;
+            await Application.Current.MainPage.DisplayAlert("Database Error", errorMessage, "OK");
+        }
         catch (Exception ex)
         {
             await Application.Current.MainPage.DisplayAlert("Error", $"An unexpected error occurred: {ex.Message}", "OK");

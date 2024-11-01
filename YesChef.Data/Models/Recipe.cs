@@ -24,8 +24,6 @@ namespace Yes_Chef.Models
         [Required]
         public int ServingSize { get; set; }
 
-        public ICollection<RecipeTag> RecipeTags { get; set; }
-
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }
 
@@ -46,5 +44,22 @@ namespace Yes_Chef.Models
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<Instruction> Instructions { get; set; } = new List<Instruction>();
         public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
+        public ICollection<RecipeTag> RecipeTags { get; set; } = new List<RecipeTag>();
+
+        [NotMapped]
+        public string TagsDisplay
+        {
+            get
+            {
+                if (RecipeTags != null && RecipeTags.Any())
+                {
+                    return string.Join(", ", RecipeTags.Select(rt => rt.Tag.TagName));
+                }
+                else
+                {
+                    return string.Empty;
+                }
+            }
+        }
     }
 }

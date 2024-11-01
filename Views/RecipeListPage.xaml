@@ -57,7 +57,7 @@
                             </StackLayout>
 
                             <!-- Bottom Row: Tags -->
-                            <Label Text="{Binding Tags}" FontSize="Small" LineBreakMode="WordWrap"/>
+                            <Label Text="{Binding TagsDisplay}" FontSize="Small" LineBreakMode="WordWrap"/>
                         </StackLayout>
                     </Grid>
                 </DataTemplate>
