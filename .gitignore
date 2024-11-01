@@ -82,3 +82,6 @@ appsettings.json
 secrets.json
 secrets.development.json
 Credentials.md
+
+# Ignore Migrations
+Migrations/

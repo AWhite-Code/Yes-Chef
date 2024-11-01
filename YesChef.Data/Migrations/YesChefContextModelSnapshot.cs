@@ -235,7 +235,8 @@ namespace YesChef.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<decimal>("Quantity")
-                        .HasColumnType("decimal(18,2)");
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("RecipeID")
                         .HasColumnType("int");
