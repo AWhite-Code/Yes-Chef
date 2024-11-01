@@ -75,6 +75,25 @@ namespace Yes_Chef.Data
                 entry.State = EntityState.Modified;
                 entry.Entity.IsDeleted = true;
                 entry.Entity.DeletedAt = DateTime.UtcNow;
+
+                // If the entity is Recipe, soft-delete related RecipeTags
+                if (entry.Entity is Recipe recipe)
+                {
+                    // Load the related RecipeTags if not already loaded
+                    if (recipe.RecipeTags == null || !recipe.RecipeTags.Any())
+                    {
+                        Entry(recipe).Collection(r => r.RecipeTags).Load();
+                    }
+
+                    foreach (var recipeTag in recipe.RecipeTags)
+                    {
+                        recipeTag.IsDeleted = true;
+                        recipeTag.DeletedAt = DateTime.UtcNow;
+
+                        // Mark the entity as modified to ensure it gets saved
+                        Entry(recipeTag).State = EntityState.Modified;
+                    }
+                }
             }
         }
 

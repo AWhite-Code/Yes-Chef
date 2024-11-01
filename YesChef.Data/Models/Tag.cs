@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Yes_Chef.Models
+using Yes_Chef.Models.Interfaces;
 
 public class Tag : IAuditableEntity
 {
