@@ -1,10 +1,10 @@
 using System.Collections.ObjectModel;
-using Yes_Chef.Models;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Yes_Chef.Data;
+using Yes_Chef.Models;
 using Yes_Chef.ViewModels;
 using Yes_Chef.Views;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.EntityFrameworkCore;
 
 public class AddRecipeViewModel : BaseViewModel
 {
@@ -13,21 +13,97 @@ public class AddRecipeViewModel : BaseViewModel
     // Properties bound to the UI
     public string RecipeName { get; set; }
     public string Description { get; set; }
-    public int ServingSize { get; set; }
-    public TimeSpan? PrepTime { get; set; }
-    public TimeSpan? CookTime { get; set; }
+
+    // ServingSize
+    private int _servingSize;
+    public int ServingSize
+    {
+        get => _servingSize;
+        set => SetProperty(ref _servingSize, value);
+    }
+
+    private string _servingSizeText;
+    public string ServingSizeText
+    {
+        get => _servingSizeText;
+        set
+        {
+            if (SetProperty(ref _servingSizeText, value))
+            {
+                if (int.TryParse(value, out int result))
+                {
+                    ServingSize = result;
+                }
+                else
+                {
+                    // Handle invalid input
+                    ServingSize = 0;
+                }
+            }
+        }
+    }
+
+    // PrepTime
+    private TimeSpan? _prepTime;
+    public TimeSpan? PrepTime
+    {
+        get => _prepTime;
+        set => SetProperty(ref _prepTime, value);
+    }
+
+    private string _prepTimeText;
+    public string PrepTimeText
+    {
+        get => _prepTimeText;
+        set
+        {
+            if (SetProperty(ref _prepTimeText, value))
+            {
+                if (double.TryParse(value, out double minutes))
+                {
+                    PrepTime = TimeSpan.FromMinutes(minutes);
+                }
+                else
+                {
+                    PrepTime = null;
+                }
+            }
+        }
+    }
+
+    // CookTime
+    private TimeSpan? _cookTime;
+    public TimeSpan? CookTime
+    {
+        get => _cookTime;
+        set => SetProperty(ref _cookTime, value);
+    }
+
+    private string _cookTimeText;
+    public string CookTimeText
+    {
+        get => _cookTimeText;
+        set
+        {
+            if (SetProperty(ref _cookTimeText, value))
+            {
+                if (double.TryParse(value, out double minutes))
+                {
+                    CookTime = TimeSpan.FromMinutes(minutes);
+                }
+                else
+                {
+                    CookTime = null;
+                }
+            }
+        }
+    }
 
     public ObservableCollection<RecipeIngredient> Ingredients { get; }
     public ObservableCollection<Instruction> Instructions { get; }
 
     public Command SaveCommand { get; }
     public Command CancelCommand { get; }
-
-    private async Task Cancel()
-    {
-        // Navigate back to the previous page
-        await Shell.Current.GoToAsync("..");
-    }
 
     public AddRecipeViewModel(IDbContextFactory<YesChefContext> contextFactory)
     {
@@ -37,6 +113,17 @@ public class AddRecipeViewModel : BaseViewModel
 
         SaveCommand = new Command(async () => await SaveRecipe());
         CancelCommand = new Command(async () => await Cancel());
+
+        // Initialize text properties
+        ServingSizeText = string.Empty;
+        PrepTimeText = string.Empty;
+        CookTimeText = string.Empty;
+    }
+
+    private async Task Cancel()
+    {
+        // Navigate back to the previous page
+        await Shell.Current.GoToAsync("..");
     }
 
     private async Task SaveRecipe()
@@ -44,7 +131,7 @@ public class AddRecipeViewModel : BaseViewModel
         using var context = _contextFactory.CreateDbContext();
 
         // Normalize the recipe name for comparison
-        var normalizedRecipeName = this.RecipeName.Trim().ToLower();
+        var normalizedRecipeName = this.RecipeName?.Trim().ToLower();
 
         // Check if a recipe with the same name already exists
         var existingRecipe = await context.Recipes
@@ -59,7 +146,7 @@ public class AddRecipeViewModel : BaseViewModel
 
         var recipe = new Recipe
         {
-            RecipeName = this.RecipeName.Trim(),
+            RecipeName = this.RecipeName?.Trim(),
             Description = this.Description,
             ServingSize = this.ServingSize,
             PrepTime = this.PrepTime,
@@ -88,5 +175,3 @@ public class AddRecipeViewModel : BaseViewModel
         }
     }
 }
-
-
