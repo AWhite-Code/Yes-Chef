@@ -24,7 +24,7 @@ namespace Yes_Chef.Models
         [Required]
         public int ServingSize { get; set; }
 
-        // Removed Tags as a string; replaced with navigation property if Tags are implemented
+        public ICollection<RecipeTag> RecipeTags { get; set; }
 
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }

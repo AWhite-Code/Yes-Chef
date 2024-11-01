@@ -30,6 +30,8 @@ namespace Yes_Chef.Data
             modelBuilder.ApplyConfiguration(new RecipeIngredientConfiguration());
             modelBuilder.ApplyConfiguration(new InstructionConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeImageConfiguration());
+            modelBuilder.ApplyConfiguration(new TagConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeTagConfiguration());
 
             // Apply global query filters for all IAuditableEntity
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
