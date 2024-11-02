@@ -17,6 +17,10 @@ namespace Yes_Chef.Data.Configurations
                    .IsRequired()
                    .HasMaxLength(200);
 
+            builder.HasIndex(r => r.RecipeName)
+                .IsUnique()
+                .HasFilter("[IsDeleted] = 0");
+
             builder.Property(r => r.Description)
                    .HasMaxLength(1000);
 

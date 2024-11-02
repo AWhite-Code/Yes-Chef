@@ -130,23 +130,58 @@ public class AddRecipeViewModel : BaseViewModel
     {
         using var context = _contextFactory.CreateDbContext();
 
-        // Normalize the recipe name for comparison
-        var normalizedRecipeName = this.RecipeName?.Trim().ToLower();
+        var recipeName = this.RecipeName?.Trim();
 
-        // Check if a recipe with the same name already exists
+        if (string.IsNullOrEmpty(recipeName))
+        {
+            await Application.Current.MainPage.DisplayAlert("Error", "Recipe name is required.", "OK");
+            return;
+        }
+
+        // Check if a recipe with the same name already exists (including soft-deleted ones)
         var existingRecipe = await context.Recipes
             .AsNoTracking()
-            .FirstOrDefaultAsync(r => r.RecipeName.ToLower() == normalizedRecipeName);
+            .FirstOrDefaultAsync(r => r.RecipeName == recipeName);
 
         if (existingRecipe != null)
         {
-            await Application.Current.MainPage.DisplayAlert("Error", "A recipe with this name already exists.", "OK");
-            return;
+            if (existingRecipe.IsDeleted)
+            {
+                // Option 1: Offer to restore the soft-deleted recipe
+                var restore = await Application.Current.MainPage.DisplayAlert(
+                    "Recipe Exists",
+                    "A recipe with this name was previously deleted. Do you want to restore it?",
+                    "Yes",
+                    "No");
+
+                if (restore)
+                {
+                    // Restore the soft-deleted recipe
+                    existingRecipe.IsDeleted = false;
+                    existingRecipe.DeletedAt = null;
+                    context.Recipes.Update(existingRecipe);
+                    await context.SaveChangesAsync();
+
+                    // Navigate back to the recipe list
+                    await Shell.Current.GoToAsync("..");
+                    return;
+                }
+                else
+                {
+                    await Application.Current.MainPage.DisplayAlert("Error", "Please choose a different recipe name.", "OK");
+                    return;
+                }
+            }
+            else
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", "A recipe with this name already exists.", "OK");
+                return;
+            }
         }
 
         var recipe = new Recipe
         {
-            RecipeName = this.RecipeName?.Trim(),
+            RecipeName = recipeName,
             Description = this.Description,
             ServingSize = this.ServingSize,
             PrepTime = this.PrepTime,
@@ -174,4 +209,5 @@ public class AddRecipeViewModel : BaseViewModel
             await Application.Current.MainPage.DisplayAlert("Error", $"An unexpected error occurred: {ex.Message}", "OK");
         }
     }
+
 }

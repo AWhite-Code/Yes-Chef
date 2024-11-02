@@ -21,6 +21,8 @@ namespace Yes_Chef.Data
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<RecipeImage> RecipeImages { get; set; }
+        public DbSet<RecipeTag> RecipeTags { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

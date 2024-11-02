@@ -37,7 +37,10 @@ namespace Yes_Chef.ViewModels
                 using var context = _contextFactory.CreateDbContext();
 
                 var recipes = await context.Recipes
-                    .Where(r => r.DeletedAt != null)
+                    .IgnoreQueryFilters()
+                    .Where(r => r.IsDeleted)
+                    .Include(r => r.RecipeTags)
+                        .ThenInclude(rt => rt.Tag)
                     .AsNoTracking()
                     .ToListAsync();
 
@@ -59,10 +62,26 @@ namespace Yes_Chef.ViewModels
             {
                 using var context = _contextFactory.CreateDbContext();
 
-                var recipeToRestore = await context.Recipes.FirstOrDefaultAsync(r => r.RecipeID == recipe.RecipeID);
+                // Ignore query filters to find the soft-deleted recipe
+                var recipeToRestore = await context.Recipes
+                    .IgnoreQueryFilters()
+                    .Include(r => r.RecipeTags)
+                        .ThenInclude(rt => rt.Tag)
+                    .FirstOrDefaultAsync(r => r.RecipeID == recipe.RecipeID);
+
                 if (recipeToRestore != null)
                 {
+                    recipeToRestore.IsDeleted = false;
                     recipeToRestore.DeletedAt = null;
+
+                    // Restore related RecipeTags if necessary
+                    foreach (var recipeTag in recipeToRestore.RecipeTags)
+                    {
+                        recipeTag.IsDeleted = false;
+                        recipeTag.DeletedAt = null;
+                        context.Entry(recipeTag).State = EntityState.Modified;
+                    }
+
                     await context.SaveChangesAsync();
 
                     DeletedRecipes.Remove(recipe);
@@ -88,13 +107,22 @@ namespace Yes_Chef.ViewModels
                 {
                     using var context = _contextFactory.CreateDbContext();
 
+                    // Ignore query filters to find the soft-deleted recipe
                     var recipeToDelete = await context.Recipes
+                        .IgnoreQueryFilters()
                         .Include(r => r.RecipeIngredients)
                         .Include(r => r.Instructions)
+                        .Include(r => r.RecipeTags)
+                            .ThenInclude(rt => rt.Tag)
                         .FirstOrDefaultAsync(r => r.RecipeID == recipe.RecipeID);
 
                     if (recipeToDelete != null)
                     {
+                        // Remove related entities
+                        context.RecipeIngredients.RemoveRange(recipeToDelete.RecipeIngredients);
+                        context.Instructions.RemoveRange(recipeToDelete.Instructions);
+                        context.RecipeTags.RemoveRange(recipeToDelete.RecipeTags);
+
                         context.Recipes.Remove(recipeToDelete);
                         await context.SaveChangesAsync();
 

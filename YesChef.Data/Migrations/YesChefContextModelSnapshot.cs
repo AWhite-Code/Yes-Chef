@@ -22,6 +22,78 @@ namespace YesChef.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("RecipeTag", b =>
+                {
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TagID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.HasKey("RecipeID", "TagID");
+
+                    b.HasIndex("TagID");
+
+                    b.ToTable("RecipeTags");
+                });
+
+            modelBuilder.Entity("Tag", b =>
+                {
+                    b.Property<int>("TagID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagID"));
+
+                    b.Property<string>("BackgroundColor")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<string>("BorderColor")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("TagName")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("TextColor")
+                        .IsRequired()
+                        .HasMaxLength(7)
+                        .HasColumnType("nvarchar(7)");
+
+                    b.HasKey("TagID");
+
+                    b.ToTable("Tag");
+                });
+
             modelBuilder.Entity("Yes_Chef.Models.IngredientRef", b =>
                 {
                     b.Property<int>("IngredientRefID")
@@ -146,7 +218,8 @@ namespace YesChef.Data.Migrations
                     b.HasKey("RecipeID");
 
                     b.HasIndex("RecipeName")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[IsDeleted] = 0");
 
                     b.ToTable("Recipes");
 
@@ -254,6 +327,25 @@ namespace YesChef.Data.Migrations
                     b.ToTable("RecipeIngredients");
                 });
 
+            modelBuilder.Entity("RecipeTag", b =>
+                {
+                    b.HasOne("Yes_Chef.Models.Recipe", "Recipe")
+                        .WithMany("RecipeTags")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Tag", "Tag")
+                        .WithMany("RecipeTags")
+                        .HasForeignKey("TagID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("Tag");
+                });
+
             modelBuilder.Entity("Yes_Chef.Models.Instruction", b =>
                 {
                     b.HasOne("Yes_Chef.Models.Recipe", "Recipe")
@@ -295,6 +387,11 @@ namespace YesChef.Data.Migrations
                     b.Navigation("Recipe");
                 });
 
+            modelBuilder.Entity("Tag", b =>
+                {
+                    b.Navigation("RecipeTags");
+                });
+
             modelBuilder.Entity("Yes_Chef.Models.IngredientRef", b =>
                 {
                     b.Navigation("RecipeIngredients");
@@ -307,6 +404,8 @@ namespace YesChef.Data.Migrations
                     b.Navigation("Instructions");
 
                     b.Navigation("RecipeIngredients");
+
+                    b.Navigation("RecipeTags");
                 });
 #pragma warning restore 612, 618
         }

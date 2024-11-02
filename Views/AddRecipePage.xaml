@@ -8,9 +8,9 @@
         <StackLayout Padding="10" Spacing="10">
             <Entry Placeholder="Recipe Name" Text="{Binding RecipeName}" />
             <Editor Placeholder="Description" Text="{Binding Description}" />
-            <Entry Placeholder="Serving Size" Text="{Binding ServingSize}" Keyboard="Numeric" />
-            <Entry Placeholder="Prep Time (minutes)" Text="{Binding PrepTime}" Keyboard="Numeric" />
-            <Entry Placeholder="Cook Time (minutes)" Text="{Binding CookTime}" Keyboard="Numeric" />
+            <Entry Placeholder="Serving Size" Text="{Binding ServingSizeText}" Keyboard="Numeric" />
+            <Entry Placeholder="Prep Time (minutes)" Text="{Binding PrepTimeText}" Keyboard="Numeric" />
+            <Entry Placeholder="Cook Time (minutes)" Text="{Binding CookTimeText}" Keyboard="Numeric" />
 
             <!-- Add controls for ingredients and instructions -->
 
