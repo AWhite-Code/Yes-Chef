@@ -85,10 +85,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="NewFolder\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="YesChef.Data\YesChef.Data.csproj" />
 	</ItemGroup>
 

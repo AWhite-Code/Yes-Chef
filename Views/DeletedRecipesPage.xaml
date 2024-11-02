@@ -11,7 +11,7 @@
             <CollectionView ItemsSource="{Binding DeletedRecipes}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
-                        <StackLayout Padding="5" Margin="5" BackgroundColor="#f0f0f0">
+                        <StackLayout Padding="5" Margin="5">
                             <Label Text="{Binding RecipeName}" FontAttributes="Bold" FontSize="Medium" />
                             <Label Text="{Binding Description}" FontSize="Small" />
                             <Label Text="{Binding DeletedAt, StringFormat='Deleted At: {0:yyyy-MM-dd HH:mm}'}" FontSize="Small" />
