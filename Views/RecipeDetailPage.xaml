@@ -52,12 +52,12 @@
                 Text="{Binding ServingSize, StringFormat='Serving Size: {0}'}" />
 
             <!-- Ingredients -->
-            <ListView ItemsSource="{Binding RecipeIngredients}">
+            <ListView ItemsSource="{Binding Ingredients}">
                 <ListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <StackLayout Orientation="Horizontal" Padding="10">
-                                <Label Text="{Binding IngredientName}" FontAttributes="Bold" />
+                                <Label Text="{Binding IngredientRef.IngredientName}" FontAttributes="Bold" />
                                 <Label Text="{Binding Quantity}" Margin="5,0" />
                                 <Label Text="{Binding UnitAbbreviation}" />
                             </StackLayout>

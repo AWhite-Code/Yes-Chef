@@ -85,3 +85,6 @@ Credentials.md
 
 # Ignore Migrations
 Migrations/
+
+# Ignore Repomix
+*.txt
