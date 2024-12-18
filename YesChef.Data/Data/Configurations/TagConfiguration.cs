@@ -7,6 +7,9 @@ public class TagConfiguration : IEntityTypeConfiguration<Tag>
 {
     public void Configure(EntityTypeBuilder<Tag> builder)
     {
+
+        builder.ToTable("Tag");  // Explicitly specify the table name
+
         builder.HasKey(t => t.TagID);
 
         builder.Property(t => t.TagName)

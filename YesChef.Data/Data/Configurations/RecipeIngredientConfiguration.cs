@@ -8,30 +8,28 @@ namespace Yes_Chef.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<RecipeIngredient> builder)
         {
-            // Primary Key
             builder.HasKey(ri => ri.RecipeIngredientID);
 
-            // Enum Conversion
-            builder.Property(ri => ri.Unit)
-                   .HasConversion<string>()
-                   .IsRequired();
-
-            // Relationship Configurations
-            builder.HasOne(ri => ri.Recipe)
-                   .WithMany(r => r.RecipeIngredients)
-                   .HasForeignKey(ri => ri.RecipeID);
-
-            builder.HasOne(ri => ri.IngredientRef)
-                   .WithMany(ir => ir.RecipeIngredients)
-                   .HasForeignKey(ri => ri.IngredientRefID);
-
-            // Property Configurations
             builder.Property(ri => ri.Quantity)
-                .IsRequired()
                 .HasPrecision(18, 4);
 
-            // Seed Data (if applicable)
-            // Add seed data here if needed
+            builder.Property(ri => ri.OriginalQuantity)
+                .HasPrecision(18, 4);
+
+            builder.Property(ri => ri.DisplayOrder)
+                .HasDefaultValue(0);
+
+            builder.Property(ri => ri.RecipeSectionID)
+                .IsRequired(false);
+
+            // Configure relationship with Recipe
+            builder.HasOne(ri => ri.Recipe)
+                .WithMany(r => r.RecipeIngredients)
+                .HasForeignKey(ri => ri.RecipeID)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Index for efficient querying
+            builder.HasIndex(ri => new { ri.RecipeID, ri.RecipeSectionID, ri.DisplayOrder });
         }
     }
 }

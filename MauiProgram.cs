@@ -43,12 +43,16 @@ namespace Yes_Chef
         {
             var builder = MauiApp.CreateBuilder();
 
-            // Build configuration
-            var a = Assembly.GetExecutingAssembly();
-            using var stream = a.GetManifestResourceStream("Yes_Chef.appsettings.json");
+            // Build configuration using embedded resource
+            var assembly = typeof(MauiProgram).Assembly;
+            var stream = assembly.GetManifestResourceStream("Yes_Chef.appsettings.json");
+
             if (stream == null)
             {
-                throw new InvalidOperationException("Could not find embedded resource 'Yes_Chef.appsettings.json'");
+                // Log this error appropriately for the platform
+                System.Diagnostics.Debug.WriteLine("Could not find embedded appsettings.json");
+                throw new InvalidOperationException(
+                    "Could not find embedded appsettings.json. Ensure it exists and is marked as an Embedded Resource.");
             }
 
             var config = new ConfigurationBuilder()
@@ -57,7 +61,7 @@ namespace Yes_Chef
 
             builder.Configuration.AddConfiguration(config);
 
-            // Configure fonts and app
+            // Rest of your configuration...
             builder
                 .UseMauiApp<App>()
                 .ConfigureFonts(fonts =>
@@ -65,39 +69,32 @@ namespace Yes_Chef
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 });
 
-            // Configure services
+            // Services configuration...
             builder.Services.AddSingleton<MainPage>();
             builder.Services.AddSingleton<MainPageViewModel>();
-
             builder.Services.AddTransient<RecipeListPage>();
             builder.Services.AddTransient<RecipeListViewModel>();
-
             builder.Services.AddTransient<RecipeDetailPage>();
             builder.Services.AddTransient<RecipeDetailViewModel>();
-
             builder.Services.AddTransient<AddRecipePage>();
             builder.Services.AddTransient<AddRecipeViewModel>();
-
             builder.Services.AddTransient<DeletedRecipesPage>();
             builder.Services.AddTransient<DeletedRecipesViewModel>();
-
             builder.Services.AddSingleton<DataCleanupService>();
 
-
-
-            // Configure DbContext
+            // DbContext configuration
             builder.Services.AddDbContextFactory<YesChefContext>(options =>
             {
-                var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+                var connectionString = config.GetConnectionString("DefaultConnection");
+                if (string.IsNullOrWhiteSpace(connectionString))
+                {
+                    throw new InvalidOperationException("Connection string 'DefaultConnection' not found in configuration.");
+                }
                 options.UseSqlServer(connectionString);
             });
 
-
-            // Build the app
             var app = builder.Build();
-
             InitializeDatabaseAndCleanup(app);
-
             return app;
         }
     }

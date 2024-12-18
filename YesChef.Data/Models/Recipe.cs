@@ -24,6 +24,9 @@ namespace Yes_Chef.Models
         [Required]
         public int ServingSize { get; set; }
 
+        [Required]
+        public int OriginalServingSize { get; set; }  // Added for scaling calculations
+
         public TimeSpan? PrepTime { get; set; }
         public TimeSpan? CookTime { get; set; }
 
@@ -41,6 +44,7 @@ namespace Yes_Chef.Models
         public DateTime? DeletedAt { get; set; }
 
         // Navigation Properties
+        public ICollection<RecipeSection> Sections { get; set; } = new List<RecipeSection>();
         public ICollection<RecipeIngredient> RecipeIngredients { get; set; } = new List<RecipeIngredient>();
         public ICollection<Instruction> Instructions { get; set; } = new List<Instruction>();
         public ICollection<RecipeImage> Images { get; set; } = new List<RecipeImage>();
@@ -55,10 +59,7 @@ namespace Yes_Chef.Models
                 {
                     return string.Join(", ", RecipeTags.Select(rt => rt.Tag.TagName));
                 }
-                else
-                {
-                    return string.Empty;
-                }
+                return string.Empty;
             }
         }
     }

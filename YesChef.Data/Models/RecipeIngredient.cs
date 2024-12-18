@@ -17,11 +17,20 @@ namespace Yes_Chef.Models
         [ForeignKey("IngredientRef")]
         public int IngredientRefID { get; set; }
 
+        [ForeignKey("RecipeSection")]
+        public int? RecipeSectionID { get; set; }  // Nullable as sections are optional
+
         [Required]
         public decimal Quantity { get; set; }
 
         [Required]
+        public decimal OriginalQuantity { get; set; }  // Added for scaling calculations
+
+        [Required]
         public UnitType Unit { get; set; }
+
+        public int DisplayOrder { get; set; }
+
         public bool IsDeleted { get; set; } = false;
         public DateTime? DeletedAt { get; set; }
 
@@ -31,5 +40,6 @@ namespace Yes_Chef.Models
         // Navigation Properties
         public Recipe Recipe { get; set; } = null!;
         public IngredientRef IngredientRef { get; set; } = null!;
+        public RecipeSection? RecipeSection { get; set; }
     }
 }

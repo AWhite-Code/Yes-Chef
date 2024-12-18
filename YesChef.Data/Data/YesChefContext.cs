@@ -22,6 +22,7 @@ namespace Yes_Chef.Data
         public DbSet<Instruction> Instructions { get; set; }
         public DbSet<RecipeImage> RecipeImages { get; set; }
         public DbSet<RecipeTag> RecipeTags { get; set; }
+        public DbSet<RecipeSection> RecipeSections { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,6 +35,7 @@ namespace Yes_Chef.Data
             modelBuilder.ApplyConfiguration(new RecipeImageConfiguration());
             modelBuilder.ApplyConfiguration(new TagConfiguration());
             modelBuilder.ApplyConfiguration(new RecipeTagConfiguration());
+            modelBuilder.ApplyConfiguration(new RecipeSectionConfiguration());
 
             // Apply global query filters for all IAuditableEntity
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())

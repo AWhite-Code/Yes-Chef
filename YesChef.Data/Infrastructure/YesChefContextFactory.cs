@@ -10,7 +10,8 @@ namespace Yes_Chef.Data
     {
         public YesChefContext CreateDbContext(string[] args)
         {
-            var basePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            // Get the directory where YesChefContextFactory.cs is located
+            var basePath = Directory.GetCurrentDirectory();
 
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(basePath)

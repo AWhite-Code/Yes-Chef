@@ -46,7 +46,7 @@ namespace YesChef.Data.Migrations
 
                     b.HasIndex("TagID");
 
-                    b.ToTable("RecipeTags");
+                    b.ToTable("RecipeTags", (string)null);
                 });
 
             modelBuilder.Entity("Tag", b =>
@@ -91,7 +91,7 @@ namespace YesChef.Data.Migrations
 
                     b.HasKey("TagID");
 
-                    b.ToTable("Tag");
+                    b.ToTable("Tag", (string)null);
                 });
 
             modelBuilder.Entity("Yes_Chef.Models.IngredientRef", b =>
@@ -204,6 +204,9 @@ namespace YesChef.Data.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<int>("OriginalServingSize")
+                        .HasColumnType("int");
+
                     b.Property<TimeSpan?>("PrepTime")
                         .HasColumnType("time");
 
@@ -232,6 +235,7 @@ namespace YesChef.Data.Migrations
                             DateModified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "A classic Italian pasta dish.",
                             IsDeleted = false,
+                            OriginalServingSize = 0,
                             PrepTime = new TimeSpan(0, 0, 15, 0, 0),
                             RecipeName = "Spaghetti Bolognese",
                             ServingSize = 4
@@ -244,6 +248,7 @@ namespace YesChef.Data.Migrations
                             DateModified = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc),
                             Description = "A spicy and flavorful dish.",
                             IsDeleted = false,
+                            OriginalServingSize = 0,
                             PrepTime = new TimeSpan(0, 0, 20, 0, 0),
                             RecipeName = "Chicken Curry",
                             ServingSize = 4
@@ -301,17 +306,29 @@ namespace YesChef.Data.Migrations
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("DisplayOrder")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
+
                     b.Property<int>("IngredientRefID")
                         .HasColumnType("int");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
+                    b.Property<decimal>("OriginalQuantity")
+                        .HasPrecision(18, 4)
+                        .HasColumnType("decimal(18,4)");
+
                     b.Property<decimal>("Quantity")
                         .HasPrecision(18, 4)
                         .HasColumnType("decimal(18,4)");
 
                     b.Property<int>("RecipeID")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("RecipeSectionID")
                         .HasColumnType("int");
 
                     b.Property<string>("Unit")
@@ -322,9 +339,49 @@ namespace YesChef.Data.Migrations
 
                     b.HasIndex("IngredientRefID");
 
-                    b.HasIndex("RecipeID");
+                    b.HasIndex("RecipeSectionID");
+
+                    b.HasIndex("RecipeID", "RecipeSectionID", "DisplayOrder");
 
                     b.ToTable("RecipeIngredients");
+                });
+
+            modelBuilder.Entity("Yes_Chef.Models.RecipeSection", b =>
+                {
+                    b.Property<int>("RecipeSectionID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RecipeSectionID"));
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateModified")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("DisplayOrder")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("RecipeID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("SectionName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("RecipeSectionID");
+
+                    b.HasIndex("RecipeID", "DisplayOrder");
+
+                    b.ToTable("RecipeSections");
                 });
 
             modelBuilder.Entity("RecipeTag", b =>
@@ -382,7 +439,25 @@ namespace YesChef.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Yes_Chef.Models.RecipeSection", "RecipeSection")
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("RecipeSectionID")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("IngredientRef");
+
+                    b.Navigation("Recipe");
+
+                    b.Navigation("RecipeSection");
+                });
+
+            modelBuilder.Entity("Yes_Chef.Models.RecipeSection", b =>
+                {
+                    b.HasOne("Yes_Chef.Models.Recipe", "Recipe")
+                        .WithMany("Sections")
+                        .HasForeignKey("RecipeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Recipe");
                 });
@@ -406,6 +481,13 @@ namespace YesChef.Data.Migrations
                     b.Navigation("RecipeIngredients");
 
                     b.Navigation("RecipeTags");
+
+                    b.Navigation("Sections");
+                });
+
+            modelBuilder.Entity("Yes_Chef.Models.RecipeSection", b =>
+                {
+                    b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618
         }
